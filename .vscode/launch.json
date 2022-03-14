@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-AutomanagerApplication<automanager>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "com.autobots.automanager.AutomanagerApplication",
+      "projectName": "automanager",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
