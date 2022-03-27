@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.modelos.AdicionadorLinkCliente;
+import com.autobots.automanager.modelos.AdicionadorLinkDocumento;
 import com.autobots.automanager.modelos.ClienteSelecionador;
 import com.autobots.automanager.modelos.DocumentoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
@@ -32,31 +33,47 @@ public class DocumentoControle {
 	@Autowired
 	private ClienteSelecionador selecionador;
 	@Autowired
-	private AdicionadorLinkCliente adicionadorLink;
+	private AdicionadorLinkDocumento adicionadorLink;
 
 
 	@GetMapping("/documento/{id}")
-	public Optional<Documento> obterDocumento(@PathVariable long id) {
-		Optional<Documento> documento = repositorioDocumento.findById(id);
-		if (documento.isEmpty()) {
+	public ResponseEntity<Documento> obterDocumento(@PathVariable long id) {
+		Optional<Documento> documentoOptional = repositorioDocumento.findById(id);
+		if (documentoOptional.isEmpty()) {
 			ResponseEntity<Documento> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return documento;
+			return resposta;
 		} else {
-			// adicionadorLink.adicionarLink(documento);
-			// ResponseEntity<Documento> resposta = new ResponseEntity<Documento>(documento, HttpStatus.FOUND);
-			return documento;
+			Documento documento = documentoOptional.get();
+			adicionadorLink.adicionarLink(documento);
+			ResponseEntity<Documento> resposta = new ResponseEntity<Documento>(documento, HttpStatus.FOUND);
+			return resposta;
 		}
 	}
 
-	@GetMapping("/documentos/{clienteId}")
-	public List<Documento> obterDocumentos(@PathVariable long clienteId) {
+	@GetMapping("/documentosCliente/{clienteId}")
+	public ResponseEntity<List<Documento>> obterDocumentosPorCliente(@PathVariable long clienteId) {
 		Cliente cliente = repositorioCliente.getById(clienteId);
 		if (cliente == null) {
-			// ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return null;
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
 		} else {
 			List<Documento> documentos = cliente.getDocumentos();
-			return documentos;
+			adicionadorLink.adicionarLinks(documentos);
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(documentos, HttpStatus.FOUND);
+			return resposta;
+		}
+	}
+
+	@GetMapping("/documentos")
+	public ResponseEntity<List<Documento>> obterTodosOsDocumentos() {
+		List<Documento> listaDocumentos = repositorioDocumento.findAll();
+		if (listaDocumentos.isEmpty()) {
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			adicionadorLink.adicionarLink(listaDocumentos);
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<List<Documento>> (listaDocumentos, HttpStatus.FOUND);
+			return resposta;
 		}
 	}
 

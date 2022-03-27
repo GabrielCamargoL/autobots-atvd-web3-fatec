@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.modelos.AdicionadorLinkCliente;
+import com.autobots.automanager.modelos.AdicionadorLinkTelefone;
 import com.autobots.automanager.modelos.ClienteSelecionador;
 import com.autobots.automanager.modelos.TelefoneAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
@@ -32,40 +33,48 @@ public class TelefoneControle {
 	@Autowired
 	private ClienteSelecionador selecionador;
 	@Autowired
-	private AdicionadorLinkCliente adicionadorLink;
+	private AdicionadorLinkTelefone adicionadorLink;
 
+	@GetMapping("/telefones")
+	public ResponseEntity<List<Telefone>> obterTelefones() {
+		List<Telefone> telefones = repositorioTelefone.findAll();
+
+		if(telefones.size() == 0) {
+			ResponseEntity<List<Telefone>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			adicionadorLink.adicionarLink(telefones);
+			ResponseEntity<List<Telefone>> resposta = new ResponseEntity<>(telefones, HttpStatus.FOUND);
+			return resposta;
+		}
+	}
 
 	@GetMapping("/telefone/{id}")
-	public Optional<Telefone> obterTelefone(@PathVariable long id) {
+	public ResponseEntity<Telefone> obterTelefone(@PathVariable long id) {
 		Optional<Telefone> telefone = repositorioTelefone.findById(id);
 		if (telefone == null) {
 			ResponseEntity<Telefone> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return telefone;
+			return resposta;
 		} else {
-			// adicionadorLink.adicionarLink(telefone);
-			// ResponseEntity<Telefone> resposta = new ResponseEntity<Telefone>(telefone, HttpStatus.FOUND);
-			return telefone;
+			adicionadorLink.adicionarLink(telefone.get());
+			ResponseEntity<Telefone> resposta = new ResponseEntity<Telefone>(telefone.get(), HttpStatus.FOUND);
+			return resposta;
 		}
 	}
 
-	@GetMapping("/telefones/{clienteId}")
-	public List<Telefone> obterTelefonesPorCliente(@PathVariable long clienteId) {
-		Cliente cliente = repositorioCliente.getById(clienteId);
-		if (cliente == null) {
-			// ResponseEntity<List<Telefone>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return null;
+	@GetMapping("/telefonesCliente/{clienteId}")
+	public ResponseEntity<List<Telefone>> obterTelefonesPorCliente(@PathVariable long clienteId) {
+		Optional<Cliente> cliente = repositorioCliente.findById(clienteId);
+		if (cliente.isEmpty()) {
+			ResponseEntity<List<Telefone>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
 		} else {
-			List<Telefone> telefones = cliente.getTelefones();
-			return telefones;
+			List<Telefone> telefones = cliente.get().getTelefones();
+			adicionadorLink.adicionarLinks(telefones);
+			ResponseEntity<List<Telefone>> resposta = new ResponseEntity<>(telefones, HttpStatus.FOUND);
+			return resposta;
 		}
 	}
-
-  @GetMapping("/telefones")
-	public List<Telefone> obterTelefones() {
-		List<Telefone> telefones = repositorioTelefone.findAll();
-		return telefones;
-	}
-	
 
 	@PostMapping("/telefone/cadastro/{clientId}")
 	public ResponseEntity<?> cadastrarTelefone(@PathVariable long clientId, @RequestBody Telefone telefone) {

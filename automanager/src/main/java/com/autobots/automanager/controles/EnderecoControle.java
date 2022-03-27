@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Endereco;
+import com.autobots.automanager.modelos.AdicionadorLinkEndereco;
 import com.autobots.automanager.modelos.EnderecoAtualizador;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.repositorios.EnderecoRepositorio;
@@ -26,31 +27,48 @@ public class EnderecoControle {
   private EnderecoRepositorio repositorioEndereco;
   @Autowired
   private ClienteRepositorio repositorioCliente;
+  @Autowired
+	private AdicionadorLinkEndereco adicionadorLink;
 
   @GetMapping("/enderecos")
   public ResponseEntity<List<Endereco>> obterEnderecos() {
     HttpStatus status = HttpStatus.NOT_FOUND;
     List<Endereco> enderecos = repositorioEndereco.findAll();
-    if (enderecos == null) {
+    if (enderecos.isEmpty()) {
       return new ResponseEntity<List<Endereco>>(status);
     } else {
       status = HttpStatus.FOUND;
+      adicionadorLink.adicionarLink(enderecos);
       return new ResponseEntity<List<Endereco>>(enderecos, status);
     }
   }
 
-  @GetMapping("/endereco/{id}")
-  public ResponseEntity<Endereco> obterEndereco(@PathVariable long id) {
+  @GetMapping("/endereco/{enderecoId}")
+  public ResponseEntity<Endereco> obterEndereco(@PathVariable long enderecoId) {
     HttpStatus status = HttpStatus.NOT_FOUND;
-    Optional<Endereco> endereco = repositorioEndereco.findById(id);
+    Optional<Endereco> endereco = repositorioEndereco.findById(enderecoId);
 
     if (endereco.isEmpty()) {
       return new ResponseEntity<Endereco>(status);
     } else {
+      adicionadorLink.adicionarLink(endereco.get());
       status = HttpStatus.FOUND;
       return new ResponseEntity<Endereco>(endereco.get(), status);
     }
   }
+
+  @GetMapping("/enderecoCliente/{clienteId}")
+	public ResponseEntity<Endereco> obterEnderecoPorCliente(@PathVariable long clienteId) {
+		Optional<Cliente> cliente = repositorioCliente.findById(clienteId);
+		if (cliente.isEmpty()) {
+			ResponseEntity<Endereco> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			adicionadorLink.adicionarLink(cliente.get().getEndereco());
+			ResponseEntity<Endereco> resposta = new ResponseEntity<>(cliente.get().getEndereco(), HttpStatus.FOUND);
+			return resposta;
+		}
+	}
 
   @PostMapping("/endereco/cadastro")
 	public ResponseEntity<?> cadastrarEndereco(@RequestBody Endereco endereco) {

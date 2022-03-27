@@ -18,7 +18,8 @@ public class AdicionadorLinkEndereco implements AdicionadorLink<Endereco> {
       long id = endereco.getId();
       Link linkProprio = WebMvcLinkBuilder
           .linkTo(WebMvcLinkBuilder
-              .methodOn(EnderecoControle.class).obterEndereco(id))
+              .methodOn(EnderecoControle.class)
+              .obterEndereco(id))
           .withSelfRel();
       endereco.add(linkProprio);
     }
@@ -31,7 +32,17 @@ public class AdicionadorLinkEndereco implements AdicionadorLink<Endereco> {
         .linkTo(WebMvcLinkBuilder
             .methodOn(EnderecoControle.class)
             .obterEnderecos())
-        .withRel("endereco");
+        .withRel("enderecos");
+    objeto.add(linkProprio);
+  }
+
+  public void adicionarLinks(Endereco objeto) {
+    long id = objeto.getId();
+    Link linkProprio = WebMvcLinkBuilder
+        .linkTo(WebMvcLinkBuilder
+            .methodOn(EnderecoControle.class)
+            .obterEnderecoPorCliente(id))
+        .withRel("enderecos");
     objeto.add(linkProprio);
   }
 
