@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.autobots.automanager.enums.TipoVeiculo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,8 +32,10 @@ public class Veiculo {
   private String modelo;
   @Column(nullable = false)
   private String placa;
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   private Usuario proprietario;
+  @JsonIgnore
   @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   private Set<Venda> vendas = new HashSet<>();
 }

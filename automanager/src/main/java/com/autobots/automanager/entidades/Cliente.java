@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Cliente extends RepresentationModel<Cliente>{
+public class Cliente extends RepresentationModel<Cliente> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

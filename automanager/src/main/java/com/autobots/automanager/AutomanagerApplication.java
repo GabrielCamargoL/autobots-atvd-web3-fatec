@@ -155,7 +155,7 @@ public class AutomanagerApplication implements CommandLineRunner {
 		Usuario Usuario = new Usuario();
 		Usuario.setNome("Pedro Alcântara de Bragança e Bourbon");
 		Usuario.setNomeSocial("Dom pedro Usuario");
-		Usuario.getPerfis().add(PerfilUsuario.Usuario);
+		Usuario.getPerfis().add(PerfilUsuario.USUARIO);
 
 		Email emailUsuario = new Email();
 		emailUsuario.setEndereco("c@c.com");
