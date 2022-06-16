@@ -10,8 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 public class CredencialUsuarioSenha extends Credencial {
+
   @Column(nullable = false, unique = true)
   private String nomeUsuario;
+
   @Column(nullable = false)
   private String senha;
 }

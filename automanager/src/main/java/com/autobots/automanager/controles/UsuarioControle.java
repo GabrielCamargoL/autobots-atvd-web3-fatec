@@ -15,16 +15,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Usuario;
-// import com.autobots.automanager.modelos.AdicionadorLinkUsuario;
-import com.autobots.automanager.modelos.UsuarioAtualizador;
+import com.autobots.automanager.modelos.atualizadores.UsuarioAtualizador;
+import com.autobots.automanager.modelos.hateoas.AdicionadorLinkUsuario;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
+import com.autobots.automanager.servicos.ServicoUsuario;
 
 @RestController
 public class UsuarioControle {
 	@Autowired
 	private RepositorioUsuario repositorio;
-	// @Autowired
-	// private AdicionadorLinkUsuario adicionadorLink;
+	@Autowired
+	private ServicoUsuario servicoUsuario;
+	@Autowired
+	private AdicionadorLinkUsuario adicionadorLink;
 
 	@GetMapping("/usuario/{id}")
 	public ResponseEntity<Usuario> obterUsuario(@PathVariable long id) {
@@ -33,7 +36,7 @@ public class UsuarioControle {
 			ResponseEntity<Usuario> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
-			// adicionadorLink.adicionarLink(usuario.get());
+			adicionadorLink.adicionarLink(usuario.get());
 			ResponseEntity<Usuario> resposta = new ResponseEntity<Usuario>(usuario.get(), HttpStatus.FOUND);
 			return resposta;
 		}
@@ -46,7 +49,7 @@ public class UsuarioControle {
 			ResponseEntity<List<Usuario>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
-			// adicionadorLink.adicionarLink(usuarios);
+			adicionadorLink.adicionarLink(usuarios);
 			ResponseEntity<List<Usuario>> resposta = new ResponseEntity<>(usuarios, HttpStatus.FOUND);
 			return resposta;
 		}
@@ -56,8 +59,9 @@ public class UsuarioControle {
 	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
 		HttpStatus status = HttpStatus.CONFLICT;
 		if (usuario.getId() == null) {
-			repositorio.save(usuario);
+			Usuario usuarioCriado = servicoUsuario.cadastrar(usuario);
 			status = HttpStatus.CREATED;
+			return new ResponseEntity<Usuario>(usuarioCriado, status);
 		}
 		return new ResponseEntity<Usuario>(status);
 

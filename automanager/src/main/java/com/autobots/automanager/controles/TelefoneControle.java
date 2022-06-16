@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Telefone;
-import com.autobots.automanager.modelos.AdicionadorLinkTelefone;
-import com.autobots.automanager.modelos.TelefoneAtualizador;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
-import com.autobots.automanager.repositorios.TelefoneRepositorio;
+import com.autobots.automanager.modelos.atualizadores.TelefoneAtualizador;
+import com.autobots.automanager.modelos.hateoas.AdicionadorLinkTelefone;
+import com.autobots.automanager.repositorios.RepositorioCliente;
+import com.autobots.automanager.repositorios.RepositorioTelefone;
 
 @RestController
 public class TelefoneControle {
 	@Autowired
-	private ClienteRepositorio repositorioCliente;
+	private RepositorioCliente repositorioCliente;
 	@Autowired
-	private TelefoneRepositorio repositorioTelefone;
+	private RepositorioTelefone repositorioTelefone;
 
 	@Autowired
 	private AdicionadorLinkTelefone adicionadorLink;

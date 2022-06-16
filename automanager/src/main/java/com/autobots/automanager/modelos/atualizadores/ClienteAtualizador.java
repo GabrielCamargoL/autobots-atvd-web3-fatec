@@ -1,4 +1,4 @@
-package com.autobots.automanager.modelos;
+package com.autobots.automanager.modelos.atualizadores;
 
 import com.autobots.automanager.entidades.Cliente;
 

@@ -21,13 +21,13 @@ import com.autobots.automanager.entidades.Venda;
 import com.autobots.automanager.enums.PerfilUsuario;
 import com.autobots.automanager.enums.TipoDocumento;
 import com.autobots.automanager.enums.TipoVeiculo;
-import com.autobots.automanager.repositorios.EmpresaRepositorio;
+import com.autobots.automanager.repositorios.RepositorioEmpresa;
 
 @SpringBootApplication
 public class AutomanagerApplication implements CommandLineRunner {
 
 	@Autowired
-	private EmpresaRepositorio repositorioEmpresa;
+	private RepositorioEmpresa repositorioEmpresa;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AutomanagerApplication.class, args);

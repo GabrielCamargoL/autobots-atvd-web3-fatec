@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
-import com.autobots.automanager.modelos.AdicionadorLinkCliente;
-import com.autobots.automanager.modelos.ClienteAtualizador;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
+import com.autobots.automanager.modelos.atualizadores.ClienteAtualizador;
+import com.autobots.automanager.modelos.hateoas.AdicionadorLinkCliente;
+import com.autobots.automanager.repositorios.RepositorioCliente;
 
 @RestController
 public class ClienteControle {
 	@Autowired
-	private ClienteRepositorio repositorio;
+	private RepositorioCliente repositorio;
 	@Autowired
 	private AdicionadorLinkCliente adicionadorLink;
 

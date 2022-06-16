@@ -1,4 +1,4 @@
-package com.autobots.automanager.modelos;
+package com.autobots.automanager.modelos.hateoas;
 
 import java.util.List;
 
@@ -35,7 +35,6 @@ public class AdicionadorLinkDocumento implements AdicionadorLink<Documento> {
         .withRel("documentos");
     objeto.add(linkProprio);
   }
-
 
   public void adicionarLinks(List<Documento> lista) {
     for (Documento documento : lista) {

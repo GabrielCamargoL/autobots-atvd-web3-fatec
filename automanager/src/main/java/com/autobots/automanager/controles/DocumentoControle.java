@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Cliente;
 import com.autobots.automanager.entidades.Documento;
-import com.autobots.automanager.modelos.AdicionadorLinkDocumento;
-import com.autobots.automanager.modelos.DocumentoAtualizador;
-import com.autobots.automanager.repositorios.ClienteRepositorio;
-import com.autobots.automanager.repositorios.DocumentoRepositorio;
+import com.autobots.automanager.modelos.atualizadores.DocumentoAtualizador;
+import com.autobots.automanager.modelos.hateoas.AdicionadorLinkDocumento;
+import com.autobots.automanager.repositorios.RepositorioCliente;
+import com.autobots.automanager.repositorios.RepositorioDocumento;
 
 @RestController
 public class DocumentoControle {
 	@Autowired
-	private ClienteRepositorio repositorioCliente;
+	private RepositorioCliente repositorioCliente;
 	@Autowired
-	private DocumentoRepositorio repositorioDocumento;
+	private RepositorioDocumento repositorioDocumento;
 
 	@Autowired
 	private AdicionadorLinkDocumento adicionadorLink;
