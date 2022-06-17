@@ -12,26 +12,29 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Empresa;
+import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.modelos.atualizadores.EmpresaAtualizador;
 import com.autobots.automanager.modelos.hateoas.AdicionadorLinkEmpresa;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.servicos.ServicoEmpresa;
 
 @RestController
+@RequestMapping("/empresas")
 public class EmpresaControle {
 	@Autowired
-	private RepositorioEmpresa repositorio;
+	private RepositorioEmpresa repositorioEmpresa;
 	@Autowired
 	private ServicoEmpresa servicoEmpresa;
 	@Autowired
 	private AdicionadorLinkEmpresa adicionadorLink;
 
-	@GetMapping("/empresa/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Empresa> obterEmpresa(@PathVariable long id) {
-		Optional<Empresa> empresa = repositorio.findById(id);
+		Optional<Empresa> empresa = repositorioEmpresa.findById(id);
 		if (empresa.isEmpty()) {
 			ResponseEntity<Empresa> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
@@ -42,9 +45,9 @@ public class EmpresaControle {
 		}
 	}
 
-	@GetMapping("/empresas")
+	@GetMapping("/")
 	public ResponseEntity<List<Empresa>> obterEmpresas() {
-		List<Empresa> empresas = repositorio.findAll();
+		List<Empresa> empresas = repositorioEmpresa.findAll();
 		if (empresas.isEmpty()) {
 			ResponseEntity<List<Empresa>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
@@ -55,7 +58,7 @@ public class EmpresaControle {
 		}
 	}
 
-	@PostMapping("/empresa/cadastro")
+	@PostMapping("/cadastro")
 	public ResponseEntity<Empresa> cadastrarEmpresa(@RequestBody Empresa empresa) {
 		HttpStatus status = HttpStatus.CONFLICT;
 		if (empresa.getId() == null) {
@@ -66,14 +69,30 @@ public class EmpresaControle {
 		return new ResponseEntity<Empresa>(status);
 	}
 
-	@PutMapping("/empresa/atualizar")
+	@PostMapping("/cadastro/servico/{empresaId}")
+	public ResponseEntity<?> cadastrarServico(@PathVariable long empresaId, @RequestBody Servico servico) {
+
+		HttpStatus status = HttpStatus.CONFLICT;
+		Optional<Empresa> empresa = repositorioEmpresa.findById(empresaId);
+
+		if (empresa.isEmpty()) {
+			status = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(status);
+		}
+
+		Empresa empresaCadastrada = servicoEmpresa.cadastrarServico(empresa.get(), servico);
+		status = HttpStatus.CREATED;
+		return new ResponseEntity<>(empresaCadastrada, status);
+	}
+
+	@PutMapping("/atualizar")
 	public ResponseEntity<Empresa> atualizarEmpresa(@RequestBody Empresa Empresa) {
 		HttpStatus status = HttpStatus.CONFLICT;
-		Empresa empresaEncontrado = repositorio.getById(Empresa.getId());
+		Empresa empresaEncontrado = repositorioEmpresa.getById(Empresa.getId());
 		if (empresaEncontrado != null) {
 			EmpresaAtualizador atualizador = new EmpresaAtualizador();
 			atualizador.atualizar(empresaEncontrado, Empresa);
-			repositorio.save(empresaEncontrado);
+			repositorioEmpresa.save(empresaEncontrado);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
@@ -81,12 +100,12 @@ public class EmpresaControle {
 		return new ResponseEntity<Empresa>(status);
 	}
 
-	@DeleteMapping("/empresa/excluir")
+	@DeleteMapping("/excluir")
 	public ResponseEntity<?> excluirEmpresa(@RequestBody Empresa empresa) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		Empresa empresaEncontrado = repositorio.getById(empresa.getId());
+		Empresa empresaEncontrado = repositorioEmpresa.getById(empresa.getId());
 		if (empresaEncontrado != null) {
-			repositorio.deleteById(empresa.getId());
+			repositorioEmpresa.deleteById(empresa.getId());
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);

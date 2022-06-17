@@ -208,8 +208,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		alinhamento.setNome("Alinhamento de rodas");
 		alinhamento.setValor(50);
 
-		empresa.getServicos().add(trocaRodas);
 		empresa.getServicos().add(alinhamento);
+		empresa.getServicos().add(trocaRodas);
 
 		Venda venda = new Venda();
 		venda.setCadastro(new Date());
