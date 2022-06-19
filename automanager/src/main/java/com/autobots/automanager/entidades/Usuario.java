@@ -14,20 +14,16 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import com.autobots.automanager.enums.PerfilUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(exclude = { "mercadorias", "vendas", "veiculos" }, callSuper = false)
 @Entity
-public class Usuario extends RepresentationModel<Usuario> {
+public class Usuario {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

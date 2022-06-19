@@ -12,11 +12,6 @@ public class ServicoVeiculo {
   RepositorioVeiculo repositorioVeiculo;
 
   public Veiculo cadastrar(Veiculo veiculo) {
-
-    if (!veiculo.getVendas().isEmpty()) {
-      veiculo.setVendas(veiculo.getVendas());
-    }
-
     Veiculo veiculoCriado = repositorioVeiculo.save(veiculo);
     return veiculoCriado;
   }

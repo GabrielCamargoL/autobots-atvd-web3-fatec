@@ -1,4 +1,4 @@
-package com.autobots.automanager.modelos.hateoas;
+package com.autobots.automanager.modelos.adicionadoresLinks;
 
 import java.util.List;
 

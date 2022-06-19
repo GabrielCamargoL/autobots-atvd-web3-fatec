@@ -1,41 +1,74 @@
 package com.autobots.automanager.servicos;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.autobots.automanager.entidades.Credencial;
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
+import com.autobots.automanager.entidades.Mercadoria;
 import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Veiculo;
+import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
+import com.autobots.automanager.repositorios.RepositorioMercadoria;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
+import com.autobots.automanager.repositorios.RepositorioVeiculo;
 
 @Service
 public class ServicoUsuario {
   @Autowired
   RepositorioUsuario repositorioUsuario;
+  @Autowired
+  RepositorioMercadoria repositorioMercadoria;
+  @Autowired
+  RepositorioVeiculo repositorioVeiculo;
+
+  public List<UsuarioHateoas> findAll() {
+
+    List<Usuario> usuarios = repositorioUsuario.findAll();
+    List<UsuarioHateoas> usuariosHateoas = new ArrayList<UsuarioHateoas>();
+    for (Usuario usuario : usuarios) {
+      usuariosHateoas.add(new UsuarioHateoas(usuario));
+    }
+
+    return usuariosHateoas;
+  }
+
+  public UsuarioHateoas findById(long id) {
+
+    Optional<Usuario> usuario = repositorioUsuario.findById(id);
+    if (usuario.isEmpty()) {
+      return null;
+    }
+    UsuarioHateoas usuariosHateoas = new UsuarioHateoas(usuario.get());
+    return usuariosHateoas;
+  }
 
   public Usuario cadastrar(Usuario usuario) {
-
-    if (!usuario.getTelefones().isEmpty()) {
-      usuario.setTelefones(usuario.getTelefones());
-    }
-    if (!usuario.getEmails().isEmpty()) {
-      usuario.setEmails(usuario.getEmails());
-    }
-    if (!usuario.getMercadorias().isEmpty()) {
-      usuario.setMercadorias(usuario.getMercadorias());
-    }
-    if (!usuario.getDocumentos().isEmpty()) {
-      usuario.setDocumentos(usuario.getDocumentos());
-    }
-    if (!usuario.getVendas().isEmpty()) {
-      usuario.setVendas(usuario.getVendas());
-    }
-    if (!usuario.getCredenciais().isEmpty()) {
-      usuario.setCredenciais(usuario.getCredenciais());
-    }
-    if (!usuario.getPerfis().isEmpty()) {
-      usuario.setPerfis(usuario.getPerfis());
-    }
-
     Usuario usuarioCriado = repositorioUsuario.save(usuario);
     return usuarioCriado;
+  }
+
+  public Usuario cadastrarMercadoria(Usuario usuario, Mercadoria mercadoria) {
+
+    Set<Mercadoria> listaMercadorias = usuario.getMercadorias();
+    listaMercadorias.add(mercadoria);
+    usuario.setMercadorias(listaMercadorias);
+    repositorioMercadoria.save(mercadoria);
+    return repositorioUsuario.save(usuario);
+  }
+
+  public Veiculo cadastrarVeiculo(Usuario usuario, Veiculo veiculo) {
+    Set<Veiculo> listaVeiculos = usuario.getVeiculos();
+    listaVeiculos.add(veiculo);
+    usuario.setVeiculos(listaVeiculos);
+    veiculo.setProprietario(usuario);
+    repositorioUsuario.save(usuario);
+    return repositorioVeiculo.save(veiculo);
   }
 }

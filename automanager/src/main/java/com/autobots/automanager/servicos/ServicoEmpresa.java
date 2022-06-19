@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Servico;
+import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.repositorios.RepositorioServico;
+import com.autobots.automanager.repositorios.RepositorioUsuario;
 
 @Service
 public class ServicoEmpresa {
@@ -17,25 +19,10 @@ public class ServicoEmpresa {
   RepositorioEmpresa repositorioEmpresa;
   @Autowired
   RepositorioServico repositorioServico;
+  @Autowired
+  RepositorioUsuario repositorioUsuario;
 
   public Empresa cadastrar(Empresa empresa) {
-
-    if (!empresa.getTelefones().isEmpty()) {
-      empresa.setTelefones(empresa.getTelefones());
-    }
-    if (!empresa.getUsuarios().isEmpty()) {
-      empresa.setUsuarios(empresa.getUsuarios());
-    }
-    if (!empresa.getMercadorias().isEmpty()) {
-      empresa.setMercadorias(empresa.getMercadorias());
-    }
-    if (!empresa.getServicos().isEmpty()) {
-      empresa.setServicos(empresa.getServicos());
-    }
-    if (!empresa.getVendas().isEmpty()) {
-      empresa.setVendas(empresa.getVendas());
-    }
-
     empresa.setCadastro(new Date());
     Empresa empresaCriada = repositorioEmpresa.save(empresa);
     return empresaCriada;
@@ -47,6 +34,14 @@ public class ServicoEmpresa {
     listaServicos.add(servico);
     empresa.setServicos(listaServicos);
     repositorioServico.save(servico);
+    return repositorioEmpresa.save(empresa);
+  }
+
+  public Empresa cadastrarFuncionario(Empresa empresa, Usuario funcionario) {
+    Set<Usuario> listaUsuario = empresa.getUsuarios();
+
+    listaUsuario.add(funcionario);
+    empresa.setUsuarios(listaUsuario);
     return repositorioEmpresa.save(empresa);
   }
 }

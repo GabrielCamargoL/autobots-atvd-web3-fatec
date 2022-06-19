@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Veiculo;
+import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
+import com.autobots.automanager.modelos.adicionadoresLinks.AdicionadorLinkUsuario;
 import com.autobots.automanager.modelos.atualizadores.UsuarioAtualizador;
-import com.autobots.automanager.modelos.hateoas.AdicionadorLinkUsuario;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
 import com.autobots.automanager.servicos.ServicoUsuario;
 
@@ -30,33 +32,36 @@ public class UsuarioControle {
 	private AdicionadorLinkUsuario adicionadorLink;
 
 	@GetMapping("/usuario/{id}")
-	public ResponseEntity<Usuario> obterUsuario(@PathVariable long id) {
-		Optional<Usuario> usuario = repositorio.findById(id);
-		if (usuario.isEmpty()) {
-			ResponseEntity<Usuario> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<UsuarioHateoas> obterUsuario(@PathVariable long id) {
+
+		UsuarioHateoas usuario = servicoUsuario.findById(id);
+		if (usuario == null) {
+			ResponseEntity<UsuarioHateoas> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
-			adicionadorLink.adicionarLink(usuario.get());
-			ResponseEntity<Usuario> resposta = new ResponseEntity<Usuario>(usuario.get(), HttpStatus.FOUND);
+			adicionadorLink.adicionarLink(usuario);
+			ResponseEntity<UsuarioHateoas> resposta = new ResponseEntity<UsuarioHateoas>(usuario, HttpStatus.FOUND);
 			return resposta;
 		}
 	}
 
 	@GetMapping("/usuarios")
-	public ResponseEntity<List<Usuario>> obterUsuarios() {
-		List<Usuario> usuarios = repositorio.findAll();
+	public ResponseEntity<List<UsuarioHateoas>> obterUsuarios() {
+
+		List<UsuarioHateoas> usuarios = servicoUsuario.findAll();
 		if (usuarios.isEmpty()) {
-			ResponseEntity<List<Usuario>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
 			adicionadorLink.adicionarLink(usuarios);
-			ResponseEntity<List<Usuario>> resposta = new ResponseEntity<>(usuarios, HttpStatus.FOUND);
+			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<>(usuarios, HttpStatus.FOUND);
 			return resposta;
 		}
 	}
 
 	@PostMapping("/usuario/cadastro")
-	public ResponseEntity<Usuario> cadastrarUsuario(@RequestBody Usuario usuario) {
+	public ResponseEntity<Usuario> cadastrarCliente(@RequestBody Usuario usuario) {
+
 		HttpStatus status = HttpStatus.CONFLICT;
 		if (usuario.getId() == null) {
 			Usuario usuarioCriado = servicoUsuario.cadastrar(usuario);
@@ -64,11 +69,23 @@ public class UsuarioControle {
 			return new ResponseEntity<Usuario>(usuarioCriado, status);
 		}
 		return new ResponseEntity<Usuario>(status);
+	}
 
+	@PostMapping("/usuario/veiculo/cadastro/{usuarioId}")
+	public ResponseEntity<Veiculo> cadastrarCliente(@PathVariable Long usuarioId, @RequestBody Veiculo veiculo) {
+
+		Optional<Usuario> usuario = repositorio.findById(usuarioId);
+		if (usuario.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+
+		Veiculo veiculoCriado = servicoUsuario.cadastrarVeiculo(usuario.get(), veiculo);
+		return new ResponseEntity<Veiculo>(veiculoCriado, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/usuario/atualizar")
 	public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario) {
+
 		HttpStatus status = HttpStatus.CONFLICT;
 		Usuario usuarioEncontrado = repositorio.getById(usuario.getId());
 		if (usuarioEncontrado != null) {
@@ -84,6 +101,7 @@ public class UsuarioControle {
 
 	@DeleteMapping("/usuario/excluir")
 	public ResponseEntity<?> excluirUsuario(@RequestBody Usuario usuario) {
+
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		Usuario usuarioEncontrado = repositorio.getById(usuario.getId());
 		if (usuarioEncontrado != null) {

@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Servico;
+import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.modelos.adicionadoresLinks.AdicionadorLinkEmpresa;
 import com.autobots.automanager.modelos.atualizadores.EmpresaAtualizador;
-import com.autobots.automanager.modelos.hateoas.AdicionadorLinkEmpresa;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.servicos.ServicoEmpresa;
 
@@ -82,6 +83,22 @@ public class EmpresaControle {
 
 		Empresa empresaCadastrada = servicoEmpresa.cadastrarServico(empresa.get(), servico);
 		status = HttpStatus.CREATED;
+		return new ResponseEntity<>(empresaCadastrada, status);
+	}
+
+	@PutMapping("/cadastro/funcionario/{empresaId}")
+	public ResponseEntity<?> cadastrarFuncionario(@PathVariable long empresaId, @RequestBody Usuario funcionario) {
+
+		HttpStatus status = HttpStatus.CONFLICT;
+		Optional<Empresa> empresa = repositorioEmpresa.findById(empresaId);
+
+		if (empresa.isEmpty()) {
+			status = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(status);
+		}
+
+		Empresa empresaCadastrada = servicoEmpresa.cadastrarFuncionario(empresa.get(), funcionario);
+		status = HttpStatus.OK;
 		return new ResponseEntity<>(empresaCadastrada, status);
 	}
 
