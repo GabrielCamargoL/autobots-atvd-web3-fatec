@@ -215,7 +215,6 @@ public class AutomanagerApplication implements CommandLineRunner {
 		venda.setCadastro(new Date());
 		venda.setUsuario(Usuario);
 		venda.getMercadorias().add(rodaLigaLeve);
-		venda.setIdentificacao("1234698745");
 		venda.setFuncionario(funcionario);
 		venda.getServicos().add(trocaRodas);
 		venda.getServicos().add(alinhamento);

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Telefone extends RepresentationModel<Telefone> {
+public class Telefone {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

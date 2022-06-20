@@ -32,21 +32,18 @@ public class Venda {
   @Column(nullable = false)
   private Date cadastro;
 
-  @Column(nullable = false, unique = true)
-  private String identificacao;
-
   @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   private Usuario Usuario;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   @JsonIgnore
+  @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   private Usuario funcionario;
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+  @OneToMany(fetch = FetchType.EAGER)
   private Set<Mercadoria> mercadorias = new HashSet<>();
 
-  @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+  @OneToMany(fetch = FetchType.EAGER)
   private Set<Servico> servicos = new HashSet<>();
 
   @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
