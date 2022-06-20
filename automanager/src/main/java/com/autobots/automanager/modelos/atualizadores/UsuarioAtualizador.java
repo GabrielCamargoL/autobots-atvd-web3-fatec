@@ -20,10 +20,6 @@ public class UsuarioAtualizador {
 			usuario.setDocumentos(atualizacao.getDocumentos());
 		}
 
-		if (!verificador.verificar(atualizacao.getEmails())) {
-			usuario.setEmails(atualizacao.getEmails());
-		}
-
 		if (!verificador.verificar(atualizacao.getMercadorias())) {
 			usuario.setMercadorias(atualizacao.getMercadorias());
 		}
@@ -38,10 +34,6 @@ public class UsuarioAtualizador {
 
 		if (!verificador.verificar(atualizacao.getPerfis())) {
 			usuario.setPerfis(atualizacao.getPerfis());
-		}
-
-		if (!verificador.verificar(atualizacao.getCredenciais())) {
-			usuario.setCredenciais(atualizacao.getCredenciais());
 		}
 	}
 

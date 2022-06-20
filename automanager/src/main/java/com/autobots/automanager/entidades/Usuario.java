@@ -34,6 +34,12 @@ public class Usuario {
   @Column
   private String nomeSocial;
 
+  @Column
+  private String email;
+
+  @Column
+  private String senha;
+
   @ElementCollection(fetch = FetchType.EAGER)
   private Set<PerfilUsuario> perfis = new HashSet<>();
 
@@ -45,12 +51,6 @@ public class Usuario {
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   private Set<Documento> documentos = new HashSet<>();
-
-  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Set<Email> emails = new HashSet<>();
-
-  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-  private Set<Credencial> credenciais = new HashSet<>();
 
   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
   private Set<Mercadoria> mercadorias = new HashSet<>();

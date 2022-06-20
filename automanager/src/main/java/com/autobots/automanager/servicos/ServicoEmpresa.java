@@ -1,6 +1,9 @@
 package com.autobots.automanager.servicos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import com.autobots.automanager.repositorios.RepositorioMercadoria;
 import com.autobots.automanager.repositorios.RepositorioServico;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
 import com.autobots.automanager.repositorios.RepositorioVeiculo;
+import com.autobots.automanager.repositorios.RepositorioVenda;
 
 @Service
 public class ServicoEmpresa {
@@ -30,6 +34,8 @@ public class ServicoEmpresa {
   RepositorioVeiculo repositorioVeiculo;
   @Autowired
   RepositorioMercadoria repositorioMercadoria;
+  @Autowired
+  RepositorioVenda repositorioVenda;
 
   public Empresa cadastrar(Empresa empresa) {
     empresa.setCadastro(new Date());
@@ -56,16 +62,53 @@ public class ServicoEmpresa {
 
   public Venda cadastrarVenda(Empresa empresa, Venda venda) {
 
-    venda.setCadastro(new Date());
-    venda.setUsuario(venda.getUsuario());
-    venda.setFuncionario(venda.getFuncionario());
+    Optional<Usuario> usuarioVenda = repositorioUsuario.findById(venda.getUsuario().getId());
+    if (usuarioVenda.isEmpty()) {
+      return null;
+    }
 
-    venda.setVeiculo(venda.getVeiculo());
-    Veiculo veiculo = venda.getVeiculo();
-    veiculo.getVendas().add(venda);
+    Optional<Usuario> funcionarioVenda = repositorioUsuario.findById(venda.getFuncionario().getId());
+    if (funcionarioVenda.isEmpty()) {
+      return null;
+    }
 
-    empresa.getVendas().add(venda);
+    Optional<Veiculo> veiculoVenda = repositorioVeiculo.findById(venda.getVeiculo().getId());
+    if (veiculoVenda.isEmpty()) {
+      return null;
+    }
+
+    List<Mercadoria> listaMercadorias = new ArrayList<Mercadoria>();
+    for (Mercadoria itemMercadoria : venda.getMercadorias()) {
+      Mercadoria mercadoria = repositorioMercadoria.getById(itemMercadoria.getId());
+      listaMercadorias.add(mercadoria);
+    }
+
+    List<Servico> listaServicos = new ArrayList<Servico>();
+    for (Servico itemServico : venda.getServicos()) {
+      Servico servico = repositorioServico.getById(itemServico.getId());
+      listaServicos.add(servico);
+    }
+
+    // --------------------------------------------------------------
+
+    Venda vendaCorpo = new Venda();
+    vendaCorpo.setUsuario(usuarioVenda.get());
+    vendaCorpo.setFuncionario(funcionarioVenda.get());
+
+    vendaCorpo.setVeiculo(veiculoVenda.get());
+
+    vendaCorpo.setMercadorias(listaMercadorias);
+    vendaCorpo.setServicos(listaServicos);
+
+    vendaCorpo.setCadastro(new Date());
+
+    Set<Venda> empresaVendas = empresa.getVendas();
+
+    empresaVendas.add(vendaCorpo);
+
+    veiculoVenda.get().getVendas().add(vendaCorpo);
+    Venda vendaCriada = repositorioVenda.save(vendaCorpo);
     repositorioEmpresa.save(empresa);
-    return venda;
+    return vendaCriada;
   }
 }

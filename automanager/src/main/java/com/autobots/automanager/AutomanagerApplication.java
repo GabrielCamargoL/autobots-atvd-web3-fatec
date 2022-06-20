@@ -7,9 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.autobots.automanager.entidades.CredencialUsuarioSenha;
 import com.autobots.automanager.entidades.Documento;
-import com.autobots.automanager.entidades.Email;
 import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.entidades.Mercadoria;
@@ -17,7 +15,6 @@ import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.entidades.Telefone;
 import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.entidades.Veiculo;
-import com.autobots.automanager.entidades.Venda;
 import com.autobots.automanager.enums.PerfilUsuario;
 import com.autobots.automanager.enums.TipoDocumento;
 import com.autobots.automanager.enums.TipoVeiculo;
@@ -61,11 +58,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		funcionario.setNome("Pedro Alcântara de Bragança e Bourbon");
 		funcionario.setNomeSocial("Dom Pedro");
 		funcionario.getPerfis().add(PerfilUsuario.FUNCIONARIO);
-
-		Email emailFuncionario = new Email();
-		emailFuncionario.setEndereco("a@a.com");
-
-		funcionario.getEmails().add(emailFuncionario);
+		funcionario.setEmail("a@a.com");
+		funcionario.setSenha("1234");
 
 		Endereco enderecoFuncionario = new Endereco();
 		enderecoFuncionario.setEstado("São Paulo");
@@ -92,33 +86,12 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 		funcionario.getDocumentos().add(cpf);
 
-		CredencialUsuarioSenha credencialFuncionario = new CredencialUsuarioSenha();
-		credencialFuncionario.setInativo(false);
-		credencialFuncionario.setNomeUsuario("dompedrofuncionario");
-		credencialFuncionario.setSenha("123456");
-		credencialFuncionario.setCriacao(new Date());
-		credencialFuncionario.setUltimoAcesso(new Date());
-
-		funcionario.getCredenciais().add(credencialFuncionario);
-
 		Usuario fornecedor = new Usuario();
 		fornecedor.setNome("Componentes varejo de partes automotivas ltda");
 		fornecedor.setNomeSocial("Loja do carro, vendas de componentes automotivos");
 		fornecedor.getPerfis().add(PerfilUsuario.FORNECEDOR);
-
-		Email emailFornecedor = new Email();
-		emailFornecedor.setEndereco("f@f.com");
-
-		fornecedor.getEmails().add(emailFornecedor);
-
-		CredencialUsuarioSenha credencialFornecedor = new CredencialUsuarioSenha();
-		credencialFornecedor.setInativo(false);
-		credencialFornecedor.setNomeUsuario("dompedrofornecedor");
-		credencialFornecedor.setSenha("123456");
-		credencialFornecedor.setCriacao(new Date());
-		credencialFornecedor.setUltimoAcesso(new Date());
-
-		fornecedor.getCredenciais().add(credencialFornecedor);
+		fornecedor.setEmail("fornecedor@fornece.com");
+		fornecedor.setSenha("1234");
 
 		Documento cnpj = new Documento();
 		cnpj.setDataEmissao(new Date());
@@ -156,11 +129,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		Usuario.setNome("Pedro Alcântara de Bragança e Bourbon");
 		Usuario.setNomeSocial("Dom pedro Usuario");
 		Usuario.getPerfis().add(PerfilUsuario.USUARIO);
-
-		Email emailUsuario = new Email();
-		emailUsuario.setEndereco("c@c.com");
-
-		Usuario.getEmails().add(emailUsuario);
+		Usuario.setEmail("usuario@usuario.com");
+		Usuario.setSenha("1234");
 
 		Documento cpfUsuario = new Documento();
 		cpfUsuario.setDataEmissao(new Date());
@@ -168,15 +138,6 @@ public class AutomanagerApplication implements CommandLineRunner {
 		cpfUsuario.setTipo(TipoDocumento.CPF);
 
 		Usuario.getDocumentos().add(cpfUsuario);
-
-		CredencialUsuarioSenha credencialUsuario = new CredencialUsuarioSenha();
-		credencialUsuario.setInativo(false);
-		credencialUsuario.setNomeUsuario("dompedroUsuario");
-		credencialUsuario.setSenha("123456");
-		credencialUsuario.setCriacao(new Date());
-		credencialUsuario.setUltimoAcesso(new Date());
-
-		Usuario.getCredenciais().add(credencialUsuario);
 
 		Endereco enderecoUsuario = new Endereco();
 		enderecoUsuario.setEstado("São Paulo");
@@ -211,19 +172,6 @@ public class AutomanagerApplication implements CommandLineRunner {
 		empresa.getServicos().add(alinhamento);
 		empresa.getServicos().add(trocaRodas);
 
-		Venda venda = new Venda();
-		venda.setCadastro(new Date());
-		venda.setUsuario(Usuario);
-		venda.getMercadorias().add(rodaLigaLeve);
-		venda.setFuncionario(funcionario);
-		venda.getServicos().add(trocaRodas);
-		venda.getServicos().add(alinhamento);
-		venda.setVeiculo(veiculo);
-		veiculo.getVendas().add(venda);
-
-		empresa.getVendas().add(venda);
-
 		repositorioEmpresa.save(empresa);
-
 	}
 }
