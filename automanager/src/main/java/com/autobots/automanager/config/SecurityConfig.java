@@ -20,10 +20,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.autobots.automanager.config.security.CustomUserDetailsService;
+import com.autobots.automanager.config.security.token.TokenFilter;
+import com.autobots.automanager.config.security.token.TokenService;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
-import com.autobots.automanager.security.TokenFilter;
-import com.autobots.automanager.security.TokenService;
-import com.autobots.automanager.servicos.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -60,6 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
 
+    http.cors().and().csrf().disable();
     http.authorizeHttpRequests()
         .antMatchers(rotasPublicas).permitAll()
         .anyRequest().authenticated();
@@ -67,8 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
       http.headers().frameOptions().disable();
     }
-
-    http.cors().and().csrf().disable();
 
     http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().anyRequest()
         .authenticated().and()

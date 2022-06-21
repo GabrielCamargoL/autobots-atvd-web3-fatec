@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.entidades.Empresa;
@@ -32,6 +33,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
 		Empresa empresa = new Empresa();
 		empresa.setRazaoSocial("Car service toyota ltda");
@@ -60,6 +63,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		funcionario.getPerfis().add(PerfilUsuario.FUNCIONARIO);
 		funcionario.setEmail("a@a.com");
 		funcionario.setSenha("1234");
+		String senhaEncriptada = bcrypt.encode(funcionario.getSenha());
+		funcionario.setSenha(senhaEncriptada);
 
 		Endereco enderecoFuncionario = new Endereco();
 		enderecoFuncionario.setEstado("São Paulo");
@@ -92,6 +97,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		fornecedor.getPerfis().add(PerfilUsuario.FORNECEDOR);
 		fornecedor.setEmail("fornecedor@fornece.com");
 		fornecedor.setSenha("1234");
+		String senhaFornecedorEncriptada = bcrypt.encode(fornecedor.getSenha());
+		fornecedor.setSenha(senhaFornecedorEncriptada);
 
 		Documento cnpj = new Documento();
 		cnpj.setDataEmissao(new Date());
@@ -131,6 +138,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		Usuario.getPerfis().add(PerfilUsuario.USUARIO);
 		Usuario.setEmail("usuario@usuario.com");
 		Usuario.setSenha("1234");
+		String senhaUsuarioEncriptada = bcrypt.encode(Usuario.getSenha());
+		Usuario.setSenha(senhaUsuarioEncriptada);
 
 		Documento cpfUsuario = new Documento();
 		cpfUsuario.setDataEmissao(new Date());

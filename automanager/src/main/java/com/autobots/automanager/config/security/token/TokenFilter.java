@@ -1,4 +1,4 @@
-package com.autobots.automanager.security;
+package com.autobots.automanager.config.security.token;
 
 import java.io.IOException;
 
@@ -7,8 +7,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.autobots.automanager.config.security.UserDetailsImpl;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
-import com.autobots.automanager.servicos.UserPrincipal;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +42,7 @@ public class TokenFilter extends OncePerRequestFilter {
   private void authenticateUser(String token) {
     String email = tokenService.getUsername(token);
 
-    UserPrincipal user = UserPrincipal.create(
+    UserDetailsImpl user = UserDetailsImpl.create(
         repositorioUsuario.findByEmail(email).get());
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,

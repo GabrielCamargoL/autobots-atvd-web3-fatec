@@ -1,4 +1,4 @@
-package com.autobots.automanager.security;
+package com.autobots.automanager.config.security.token;
 
 import java.util.Date;
 

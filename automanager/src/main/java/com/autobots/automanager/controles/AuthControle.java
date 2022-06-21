@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.config.security.token.TokenService;
 import com.autobots.automanager.controles.dto.TokenDTO;
 import com.autobots.automanager.controles.form.LoginForm;
 import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.repositorios.RepositorioUsuario;
-import com.autobots.automanager.security.TokenService;
 
 @RestController
 @RequestMapping("/auth")

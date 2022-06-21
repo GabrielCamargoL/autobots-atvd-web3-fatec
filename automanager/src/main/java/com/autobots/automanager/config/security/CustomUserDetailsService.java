@@ -1,4 +1,4 @@
-package com.autobots.automanager.servicos;
+package com.autobots.automanager.config.security;
 
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
       throw new UsernameNotFoundException("Este usuario não existe!: - " + username);
     }
 
-    return UserPrincipal.create(user.get());
+    return UserDetailsImpl.create(user.get());
   }
 
 }

@@ -1,4 +1,4 @@
-package com.autobots.automanager.servicos;
+package com.autobots.automanager.config.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,25 +9,28 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.enums.PerfilUsuario;
 
-public class UserPrincipal implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
   private String email;
   private String password;
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserPrincipal(Usuario usuario) {
+  public UserDetailsImpl(Usuario usuario) {
     this.email = usuario.getEmail();
     this.password = usuario.getSenha();
 
     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-    authorities.add(new SimpleGrantedAuthority(usuario.getPerfis().toString()));
+    for (PerfilUsuario perfil : usuario.getPerfis()) {
+      authorities.add(new SimpleGrantedAuthority("ROLE_".concat(perfil.name())));
+    }
 
     this.authorities = authorities;
   }
 
-  public static UserPrincipal create(Usuario usuario) {
-    return new UserPrincipal(usuario);
+  public static UserDetailsImpl create(Usuario usuario) {
+    return new UserDetailsImpl(usuario);
   }
 
   @Override
