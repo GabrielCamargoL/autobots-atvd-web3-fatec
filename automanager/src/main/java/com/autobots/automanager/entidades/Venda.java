@@ -1,8 +1,7 @@
 package com.autobots.automanager.entidades;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,26 +20,31 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(exclude = { "Usuario", "funcionario", "veiculo" })
+@EqualsAndHashCode(exclude = { "Usuario", "Funcionario", "Veiculo", "mercadorias", "servicos" })
 @Entity
 public class Venda {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  @Column(nullable = false)
+
+  @Column(nullable = true)
   private Date cadastro;
-  @Column(nullable = false, unique = true)
-  private String identificacao;
+
   @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
   private Usuario Usuario;
-  @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+
   @JsonIgnore
-  private Usuario funcionario;
-  @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-  private Set<Mercadoria> mercadorias = new HashSet<>();
-  @OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-  private Set<Servico> servicos = new HashSet<>();
+  @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+  private Usuario Funcionario;
+
+  @OneToMany(fetch = FetchType.EAGER)
+  private List<Mercadoria> mercadorias;
+
+  @OneToMany(fetch = FetchType.EAGER)
+  private List<Servico> servicos;
+
   @OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-  private Veiculo veiculo;
+  private Veiculo Veiculo;
 }
