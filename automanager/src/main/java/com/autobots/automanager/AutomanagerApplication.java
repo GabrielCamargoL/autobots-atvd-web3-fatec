@@ -57,67 +57,67 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 		empresa.getTelefones().add(telefoneEmpresa);
 
-		Usuario funcionario = new Usuario();
-		funcionario.setNome("Pedro Alcântara de Bragança e Bourbon");
-		funcionario.setNomeSocial("Dom Pedro");
-		funcionario.getPerfis().add(PerfilUsuario.FUNCIONARIO);
-		funcionario.setEmail("a@a.com");
-		funcionario.setSenha("1234");
-		String senhaEncriptada = bcrypt.encode(funcionario.getSenha());
-		funcionario.setSenha(senhaEncriptada);
+		Usuario adminstrador = new Usuario();
+		adminstrador.setNome("Pedro Alcântara de Bragança e Bourbon");
+		adminstrador.setNomeSocial("Dom Pedro");
+		adminstrador.getPerfis().add(PerfilUsuario.ADMINISTRADOR);
+		adminstrador.setEmail("a@a.com");
+		adminstrador.setSenha("1234");
+		String senhaEncriptada = bcrypt.encode(adminstrador.getSenha());
+		adminstrador.setSenha(senhaEncriptada);
 
-		Endereco enderecoFuncionario = new Endereco();
-		enderecoFuncionario.setEstado("São Paulo");
-		enderecoFuncionario.setCidade("São Paulo");
-		enderecoFuncionario.setBairro("Jardins");
-		enderecoFuncionario.setRua("Av. São Gabriel");
-		enderecoFuncionario.setNumero("00");
-		enderecoFuncionario.setCodigoPostal("01435-001");
+		Endereco enderecoAdminstrador = new Endereco();
+		enderecoAdminstrador.setEstado("São Paulo");
+		enderecoAdminstrador.setCidade("São Paulo");
+		enderecoAdminstrador.setBairro("Jardins");
+		enderecoAdminstrador.setRua("Av. São Gabriel");
+		enderecoAdminstrador.setNumero("00");
+		enderecoAdminstrador.setCodigoPostal("01435-001");
 
-		funcionario.setEndereco(enderecoFuncionario);
+		adminstrador.setEndereco(enderecoAdminstrador);
 
-		empresa.getUsuarios().add(funcionario);
+		empresa.getUsuarios().add(adminstrador);
 
-		Telefone telefoneFuncionario = new Telefone();
-		telefoneFuncionario.setDdd("011");
-		telefoneFuncionario.setNumero("9854633728");
+		Telefone telefoneAdminstrador = new Telefone();
+		telefoneAdminstrador.setDdd("011");
+		telefoneAdminstrador.setNumero("9854633728");
 
-		funcionario.getTelefones().add(telefoneFuncionario);
+		adminstrador.getTelefones().add(telefoneAdminstrador);
 
 		Documento cpf = new Documento();
 		cpf.setDataEmissao(new Date());
 		cpf.setNumero("856473819229");
 		cpf.setTipo(TipoDocumento.CPF);
 
-		funcionario.getDocumentos().add(cpf);
+		adminstrador.getDocumentos().add(cpf);
 
-		Usuario fornecedor = new Usuario();
-		fornecedor.setNome("Componentes varejo de partes automotivas ltda");
-		fornecedor.setNomeSocial("Loja do carro, vendas de componentes automotivos");
-		fornecedor.getPerfis().add(PerfilUsuario.FORNECEDOR);
-		fornecedor.setEmail("fornecedor@fornece.com");
-		fornecedor.setSenha("1234");
-		String senhaFornecedorEncriptada = bcrypt.encode(fornecedor.getSenha());
-		fornecedor.setSenha(senhaFornecedorEncriptada);
+		Usuario gerente = new Usuario();
+		gerente.setNome("Componentes varejo de partes automotivas ltda");
+		gerente.setNomeSocial("Loja do carro, vendas de componentes automotivos");
+		gerente.getPerfis().add(PerfilUsuario.GERENTE);
+		gerente.setEmail("gerente@gerente.com");
+		gerente.setSenha("1234");
+		String senhaGerenteEncriptada = bcrypt.encode(gerente.getSenha());
+		gerente.setSenha(senhaGerenteEncriptada);
 
 		Documento cnpj = new Documento();
 		cnpj.setDataEmissao(new Date());
 		cnpj.setNumero("00014556000100");
 		cnpj.setTipo(TipoDocumento.CNPJ);
 
-		fornecedor.getDocumentos().add(cnpj);
+		gerente.getDocumentos().add(cnpj);
 
-		Endereco enderecoFornecedor = new Endereco();
-		enderecoFornecedor.setEstado("Rio de Janeiro");
-		enderecoFornecedor.setCidade("Rio de Janeiro");
-		enderecoFornecedor.setBairro("Centro");
-		enderecoFornecedor.setRua("Av. República do chile");
-		enderecoFornecedor.setNumero("00");
-		enderecoFornecedor.setCodigoPostal("20031-170");
+		Endereco enderecoGerente = new Endereco();
+		enderecoGerente.setEstado("Rio de Janeiro");
+		enderecoGerente.setCidade("Rio de Janeiro");
+		enderecoGerente.setBairro("Centro");
+		enderecoGerente.setRua("Av. República do chile");
+		enderecoGerente.setNumero("00");
+		enderecoGerente.setCodigoPostal("20031-170");
 
-		fornecedor.setEndereco(enderecoFornecedor);
+		gerente.setEndereco(enderecoGerente);
 
-		empresa.getUsuarios().add(fornecedor);
+		empresa.getUsuarios().add(gerente);
 
 		Mercadoria rodaLigaLeve = new Mercadoria();
 		rodaLigaLeve.setCadastro(new Date());
@@ -130,43 +130,43 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 		empresa.getMercadorias().add(rodaLigaLeve);
 
-		fornecedor.getMercadorias().add(rodaLigaLeve);
+		gerente.getMercadorias().add(rodaLigaLeve);
 
-		Usuario Usuario = new Usuario();
-		Usuario.setNome("Pedro Alcântara de Bragança e Bourbon");
-		Usuario.setNomeSocial("Dom pedro Usuario");
-		Usuario.getPerfis().add(PerfilUsuario.USUARIO);
-		Usuario.setEmail("usuario@usuario.com");
-		Usuario.setSenha("1234");
-		String senhaUsuarioEncriptada = bcrypt.encode(Usuario.getSenha());
-		Usuario.setSenha(senhaUsuarioEncriptada);
+		Usuario cliente = new Usuario();
+		cliente.setNome("Pedro Alcântara de Bragança e Bourbon");
+		cliente.setNomeSocial("Dom pedro Usuario");
+		cliente.getPerfis().add(PerfilUsuario.CLIENTE);
+		cliente.setEmail("usuario@usuario.com");
+		cliente.setSenha("1234");
+		String senhaUsuarioEncriptada = bcrypt.encode(cliente.getSenha());
+		cliente.setSenha(senhaUsuarioEncriptada);
 
-		Documento cpfUsuario = new Documento();
-		cpfUsuario.setDataEmissao(new Date());
-		cpfUsuario.setNumero("12584698533");
-		cpfUsuario.setTipo(TipoDocumento.CPF);
+		Documento cpfCliente = new Documento();
+		cpfCliente.setDataEmissao(new Date());
+		cpfCliente.setNumero("12584698533");
+		cpfCliente.setTipo(TipoDocumento.CPF);
 
-		Usuario.getDocumentos().add(cpfUsuario);
+		cliente.getDocumentos().add(cpfCliente);
 
-		Endereco enderecoUsuario = new Endereco();
-		enderecoUsuario.setEstado("São Paulo");
-		enderecoUsuario.setCidade("São José dos Campos");
-		enderecoUsuario.setBairro("Centro");
-		enderecoUsuario.setRua("Av. Dr. Nelson D'Ávila");
-		enderecoUsuario.setNumero("00");
-		enderecoUsuario.setCodigoPostal("12245-070");
+		Endereco enderecoCliente = new Endereco();
+		enderecoCliente.setEstado("São Paulo");
+		enderecoCliente.setCidade("São José dos Campos");
+		enderecoCliente.setBairro("Centro");
+		enderecoCliente.setRua("Av. Dr. Nelson D'Ávila");
+		enderecoCliente.setNumero("00");
+		enderecoCliente.setCodigoPostal("12245-070");
 
-		Usuario.setEndereco(enderecoUsuario);
+		cliente.setEndereco(enderecoCliente);
 
 		Veiculo veiculo = new Veiculo();
 		veiculo.setPlaca("ABC-0000");
 		veiculo.setModelo("corolla-cross");
 		veiculo.setTipo(TipoVeiculo.SUV);
-		veiculo.setProprietario(Usuario);
+		veiculo.setProprietario(cliente);
 
-		Usuario.getVeiculos().add(veiculo);
+		cliente.getVeiculos().add(veiculo);
 
-		empresa.getUsuarios().add(Usuario);
+		empresa.getUsuarios().add(cliente);
 
 		Servico trocaRodas = new Servico();
 		trocaRodas.setDescricao("Troca das rodas do carro por novas");

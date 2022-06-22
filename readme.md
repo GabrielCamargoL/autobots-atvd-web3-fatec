@@ -1,6 +1,14 @@
 <h1 align="center">
  🏍️ Atividade - DW III 🚗
 </h1>
+
+#### As atividades estão divididas em branchs neste repositório.
+- [Atividade 01](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec)
+- [Atividade 02](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec)
+- [Atividade 03](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv-iii)
+- [Atividade 04](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv-iv)
+- [Atividade 05](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec)
+---
   
 # :bookmark_tabs: Sobre o projeto
 Aplicação sobre uma loja de peças de automoveis 🚗 🏍️. <BR>
