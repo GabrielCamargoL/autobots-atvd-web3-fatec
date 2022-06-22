@@ -58,8 +58,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		empresa.getTelefones().add(telefoneEmpresa);
 
 		Usuario adminstrador = new Usuario();
-		adminstrador.setNome("Pedro Alcântara de Bragança e Bourbon");
-		adminstrador.setNomeSocial("Dom Pedro");
+		adminstrador.setNome("Admin Estagiario");
+		adminstrador.setNomeSocial("Admin dono do sistema");
 		adminstrador.getPerfis().add(PerfilUsuario.ADMINISTRADOR);
 		adminstrador.setEmail("a@a.com");
 		adminstrador.setSenha("1234");
@@ -92,8 +92,8 @@ public class AutomanagerApplication implements CommandLineRunner {
 		adminstrador.getDocumentos().add(cpf);
 
 		Usuario gerente = new Usuario();
-		gerente.setNome("Componentes varejo de partes automotivas ltda");
-		gerente.setNomeSocial("Loja do carro, vendas de componentes automotivos");
+		gerente.setNome("Gerente Junior Senior");
+		gerente.setNomeSocial("Gerente Jr");
 		gerente.getPerfis().add(PerfilUsuario.GERENTE);
 		gerente.setEmail("gerente@gerente.com");
 		gerente.setSenha("1234");
@@ -134,7 +134,7 @@ public class AutomanagerApplication implements CommandLineRunner {
 
 		Usuario cliente = new Usuario();
 		cliente.setNome("Pedro Alcântara de Bragança e Bourbon");
-		cliente.setNomeSocial("Dom pedro Usuario");
+		cliente.setNomeSocial("Dom Pedro Cliente");
 		cliente.getPerfis().add(PerfilUsuario.CLIENTE);
 		cliente.setEmail("usuario@usuario.com");
 		cliente.setSenha("1234");
