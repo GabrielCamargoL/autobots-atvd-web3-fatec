@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class EmpresaControle {
 	@Autowired
 	private AdicionadorLinkEmpresa adicionadorLink;
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@GetMapping("/{id}")
 	public ResponseEntity<Empresa> obterEmpresa(@PathVariable long id) {
 		Optional<Empresa> empresa = repositorioEmpresa.findById(id);
@@ -47,6 +49,7 @@ public class EmpresaControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@GetMapping("/")
 	public ResponseEntity<List<Empresa>> obterEmpresas() {
 		List<Empresa> empresas = repositorioEmpresa.findAll();
@@ -60,6 +63,7 @@ public class EmpresaControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro")
 	public ResponseEntity<Empresa> cadastrarEmpresa(@RequestBody Empresa empresa) {
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -71,6 +75,7 @@ public class EmpresaControle {
 		return new ResponseEntity<Empresa>(status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro/servico/{empresaId}")
 	public ResponseEntity<?> cadastrarServico(@PathVariable long empresaId, @RequestBody Servico servico) {
 
@@ -87,6 +92,7 @@ public class EmpresaControle {
 		return new ResponseEntity<>(empresaCadastrada, status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro/venda/{empresaId}")
 	public ResponseEntity<Venda> cadastrarVenda(@PathVariable long empresaId, @RequestBody Venda venda) {
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -102,6 +108,7 @@ public class EmpresaControle {
 		return new ResponseEntity<Venda>(vendaCriada, status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro/funcionario/{empresaId}")
 	public ResponseEntity<?> cadastrarFuncionario(@PathVariable long empresaId, @RequestBody Usuario funcionario) {
 
@@ -118,6 +125,7 @@ public class EmpresaControle {
 		return new ResponseEntity<>(empresaCadastrada, status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PutMapping("/atualizar")
 	public ResponseEntity<Empresa> atualizarEmpresa(@RequestBody Empresa Empresa) {
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -133,6 +141,7 @@ public class EmpresaControle {
 		return new ResponseEntity<Empresa>(status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@DeleteMapping("/excluir")
 	public ResponseEntity<?> excluirEmpresa(@RequestBody Empresa empresa) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;

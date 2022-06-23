@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class UsuarioControle {
 	@Autowired
 	private AdicionadorLinkUsuario adicionadorLink;
 
+	@PreAuthorize("hasRole('CLIENTE') or hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/usuario/{id}")
 	public ResponseEntity<UsuarioHateoas> obterUsuario(@PathVariable long id) {
 
@@ -45,6 +47,7 @@ public class UsuarioControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/usuarios")
 	public ResponseEntity<List<UsuarioHateoas>> obterUsuarios() {
 
@@ -59,6 +62,7 @@ public class UsuarioControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PostMapping("/usuario/cadastro")
 	public ResponseEntity<Usuario> cadastrarCliente(@RequestBody Usuario usuario) {
 
@@ -71,6 +75,7 @@ public class UsuarioControle {
 		return new ResponseEntity<Usuario>(status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PostMapping("/usuario/veiculo/cadastro/{usuarioId}")
 	public ResponseEntity<Veiculo> cadastrarCliente(@PathVariable Long usuarioId, @RequestBody Veiculo veiculo) {
 
@@ -83,6 +88,7 @@ public class UsuarioControle {
 		return new ResponseEntity<Veiculo>(veiculoCriado, HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PutMapping("/usuario/atualizar")
 	public ResponseEntity<Usuario> atualizarUsuario(@RequestBody Usuario usuario) {
 
@@ -99,6 +105,7 @@ public class UsuarioControle {
 		return new ResponseEntity<Usuario>(status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@DeleteMapping("/usuario/excluir")
 	public ResponseEntity<?> excluirUsuario(@RequestBody Usuario usuario) {
 

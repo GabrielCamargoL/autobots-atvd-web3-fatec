@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class ServicoControle {
 	@Autowired
 	private ServicoEmpresa servicoEmpresa;
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/servicos")
 	public ResponseEntity<List<Servico>> obterServicos() {
 		List<Servico> servicos = repositorioServico.findAll();
@@ -43,6 +45,7 @@ public class ServicoControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/servico/{id}")
 	public ResponseEntity<Servico> obterServico(@PathVariable long id) {
 		Optional<Servico> servico = repositorioServico.findById(id);
@@ -55,6 +58,7 @@ public class ServicoControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/servicosEmpresa/{empresaId}")
 	public ResponseEntity<Set<Servico>> obterServicosPorEmpresa(@PathVariable long empresaId) {
 		Empresa empresa = repositorioEmpresa.getById(empresaId);
@@ -68,6 +72,7 @@ public class ServicoControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PostMapping("/servico/cadastro/{empresaId}")
 	public ResponseEntity<?> cadastrarServico(@PathVariable long empresaId, @RequestBody Servico servico) {
 
@@ -84,6 +89,7 @@ public class ServicoControle {
 		return new ResponseEntity<>(empresaCadastrada, status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@DeleteMapping("/servico/excluir/{empresaId}/{servicoId}")
 	public ResponseEntity<?> excluirServicoEmpresa(@PathVariable long empresaId, @PathVariable long servicoId) {
 

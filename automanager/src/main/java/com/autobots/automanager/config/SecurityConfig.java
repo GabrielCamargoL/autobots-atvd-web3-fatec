@@ -1,47 +1,96 @@
-// package com.autobots.automanager.config;
+package com.autobots.automanager.config;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import
-// org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-// import
-// org.springframework.security.config.annotation.web.builders.HttpSecurity;
-// import
-// org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import
-// org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-// import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.web.cors.CorsConfiguration;
-// import org.springframework.web.cors.CorsConfigurationSource;
-// import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
 
-// @Configuration
-// @EnableWebSecurity
-// @EnableMethodSecurity
-// public class SecurityConfig extends WebSecurityConfigurerAdapter {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-// private static final String[] rotasPublicas = { "/", "/usuarios",
-// "/usuario/**", "/clientes", "cliente/**",
-// "/empresas", "/empresa/**",
-// "/mercadoria/**", "/veiculo/**", "/veiculos", "/mercadorias" };
+import com.autobots.automanager.config.security.CustomUserDetailsService;
+import com.autobots.automanager.config.security.token.TokenFilter;
+import com.autobots.automanager.config.security.token.TokenService;
+import com.autobots.automanager.repositorios.RepositorioUsuario;
 
-// @Override
-// protected void configure(HttpSecurity http) throws Exception {
-// http.cors().and().csrf().disable();
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-// http.authorizeHttpRequests()
-// .antMatchers(rotasPublicas).permitAll()
-// .anyRequest().authenticated();
+  @Autowired
+  private Environment env;
 
-// http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-// }
+  @Autowired
+  CustomUserDetailsService userDetailsService;
 
-// @Bean
-// CorsConfigurationSource corsConfigurationSource() {
-// UrlBasedCorsConfigurationSource fonte = new
-// UrlBasedCorsConfigurationSource();
-// fonte.registerCorsConfiguration("/**", new
-// CorsConfiguration().applyPermitDefaultValues());
-// return fonte;
-// }
-// }
+  @Autowired
+  TokenService tokenService;
+
+  @Autowired
+  RepositorioUsuario repositorioUsuario;
+
+  private static final String[] rotasPublicas = {
+      "/",
+      "/auth/login",
+      "/usuarios", "/usuario/**",
+      "/empresas", "/empresas/**",
+      "/mercadorias", "/mercadoria/**",
+      "/veiculos", "/veiculo/**"
+  };
+
+  @Override
+  @Bean
+  protected AuthenticationManager authenticationManager() throws Exception {
+    return super.authenticationManager();
+  }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+
+    http.cors().and().csrf().disable();
+    http.authorizeHttpRequests()
+        .antMatchers(rotasPublicas).permitAll()
+        .anyRequest().authenticated();
+
+    if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
+      http.headers().frameOptions().disable();
+    }
+
+    http.authorizeRequests().antMatchers(HttpMethod.POST, "/auth/login").permitAll().anyRequest()
+        .authenticated().and()
+        .addFilterBefore(
+            new TokenFilter(
+                tokenService,
+                repositorioUsuario),
+            UsernamePasswordAuthenticationFilter.class);
+
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  }
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+  }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
+    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+}

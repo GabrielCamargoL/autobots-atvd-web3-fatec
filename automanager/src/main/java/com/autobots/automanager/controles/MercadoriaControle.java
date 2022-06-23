@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class MercadoriaControle {
 	@Autowired
 	private ServicoUsuario servicoUsuario;
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/mercadorias")
 	public ResponseEntity<List<Mercadoria>> obterMercadorias() {
 		List<Mercadoria> mercadorias = repositorioMercadoria.findAll();
@@ -43,6 +45,7 @@ public class MercadoriaControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/mercadoria/{id}")
 	public ResponseEntity<Mercadoria> obterMercadoria(@PathVariable long id) {
 		Optional<Mercadoria> mercadoria = repositorioMercadoria.findById(id);
@@ -55,6 +58,7 @@ public class MercadoriaControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/mercadoriasUsuario/{usuarioId}")
 	public ResponseEntity<Set<Mercadoria>> obterMercadoriasPorUsuario(@PathVariable long usuarioId) {
 		Usuario usuario = repositorioUsuario.getById(usuarioId);
@@ -68,6 +72,7 @@ public class MercadoriaControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PostMapping("/mercadoria/cadastro/{usuarioId}")
 	public ResponseEntity<?> cadastrarMercadoria(@PathVariable long usuarioId, @RequestBody Mercadoria mercadoria) {
 
@@ -84,6 +89,7 @@ public class MercadoriaControle {
 		return new ResponseEntity<>(usuarioCadastrado, status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@DeleteMapping("/mercadoria/excluir/{usuarioId}/{mercadoriaId}")
 	public ResponseEntity<?> excluirMercadoriaUsuario(@PathVariable long usuarioId, @PathVariable long mercadoriaId) {
 

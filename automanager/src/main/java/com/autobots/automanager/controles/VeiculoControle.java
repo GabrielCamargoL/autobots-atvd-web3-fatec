@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class VeiculoControle {
 	@Autowired
 	private AdicionadorLinkVeiculo adicionadorLink;
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/veiculo/{id}")
 	public ResponseEntity<Veiculo> obterVeiculo(@PathVariable long id) {
 		Optional<Veiculo> veiculo = repositorio.findById(id);
@@ -42,6 +44,7 @@ public class VeiculoControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/veiculos")
 	public ResponseEntity<List<Veiculo>> obterVeiculos() {
 		List<Veiculo> veiculos = repositorio.findAll();
@@ -55,6 +58,7 @@ public class VeiculoControle {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PostMapping("/veiculo/cadastro")
 	public ResponseEntity<Veiculo> cadastrarVeiculo(@RequestBody Veiculo veiculo) {
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -67,6 +71,7 @@ public class VeiculoControle {
 
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@PutMapping("/veiculo/atualizar")
 	public ResponseEntity<Veiculo> atualizarVeiculo(@RequestBody Veiculo veiculo) {
 		HttpStatus status = HttpStatus.CONFLICT;
@@ -82,6 +87,7 @@ public class VeiculoControle {
 		return new ResponseEntity<Veiculo>(status);
 	}
 
+	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@DeleteMapping("/veiculo/excluir")
 	public ResponseEntity<?> excluirVeiculo(@RequestBody Veiculo veiculo) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
