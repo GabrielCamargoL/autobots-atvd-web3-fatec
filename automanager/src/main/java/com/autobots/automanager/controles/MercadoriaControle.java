@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Mercadoria;
-import com.autobots.automanager.repositorios.RepositorioUsuario;
+import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.repositorios.RepositorioMercadoria;
-import com.autobots.automanager.servicos.ServicoUsuario;
+import com.autobots.automanager.servicos.ServicoEmpresa;
 
 @RestController
 public class MercadoriaControle {
 	@Autowired
-	private RepositorioUsuario repositorioUsuario;
+	private RepositorioEmpresa repositorioEmpresa;
 	@Autowired
 	private RepositorioMercadoria repositorioMercadoria;
 
 	@Autowired
-	private ServicoUsuario servicoUsuario;
+	private ServicoEmpresa servicoEmpresa;
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
 	@GetMapping("/mercadorias")
@@ -59,49 +59,50 @@ public class MercadoriaControle {
 	}
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
-	@GetMapping("/mercadoriasUsuario/{usuarioId}")
-	public ResponseEntity<Set<Mercadoria>> obterMercadoriasPorUsuario(@PathVariable long usuarioId) {
-		Usuario usuario = repositorioUsuario.getById(usuarioId);
-		if (usuario == null) {
+	@GetMapping("/mercadoriasUsuario/{empresaId}")
+	public ResponseEntity<Set<Mercadoria>> obterMercadoriasPorEmpresa(@PathVariable long empresaId) {
+		Empresa empresa = repositorioEmpresa.getById(empresaId);
+		if (empresa == null) {
 			ResponseEntity<Set<Mercadoria>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
-			Set<Mercadoria> mercadorias = usuario.getMercadorias();
+			Set<Mercadoria> mercadorias = empresa.getMercadorias();
 			ResponseEntity<Set<Mercadoria>> resposta = new ResponseEntity<Set<Mercadoria>>(mercadorias, HttpStatus.FOUND);
 			return resposta;
 		}
 	}
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
-	@PostMapping("/mercadoria/cadastro/{usuarioId}")
-	public ResponseEntity<?> cadastrarMercadoria(@PathVariable long usuarioId, @RequestBody Mercadoria mercadoria) {
+	@PostMapping("/mercadoria/cadastro/{empresaId}")
+	public ResponseEntity<?> cadastrarMercadoria(@PathVariable long empresaId, @RequestBody Mercadoria mercadoria) {
 
 		HttpStatus status = HttpStatus.CONFLICT;
-		Optional<Usuario> usuario = repositorioUsuario.findById(usuarioId);
+		Optional<Empresa> empresa = repositorioEmpresa.findById(empresaId);
 
-		if (usuario.isEmpty()) {
+		if (empresa.isEmpty()) {
 			status = HttpStatus.NOT_FOUND;
 			return new ResponseEntity<>(status);
 		}
 
-		Usuario usuarioCadastrado = servicoUsuario.cadastrarMercadoria(usuario.get(), mercadoria);
+		Empresa empresaAtualizada = servicoEmpresa.cadastrarMercadoria(empresa.get(), mercadoria);
 		status = HttpStatus.CREATED;
-		return new ResponseEntity<>(usuarioCadastrado, status);
+		return new ResponseEntity<>(empresaAtualizada, status);
 	}
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE') or hasRole('VENDEDOR')")
-	@DeleteMapping("/mercadoria/excluir/{usuarioId}/{mercadoriaId}")
-	public ResponseEntity<?> excluirMercadoriaUsuario(@PathVariable long usuarioId, @PathVariable long mercadoriaId) {
+	@DeleteMapping("/mercadoria/excluir/{empresaId}/{mercadoriaId}")
+	public ResponseEntity<Empresa> excluirMercadoriaUsuario(@PathVariable long empresaId,
+			@PathVariable long mercadoriaId) {
 
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
-		Optional<Usuario> UsuarioOptional = repositorioUsuario.findById(usuarioId);
-		if (UsuarioOptional.isEmpty()) {
+		Optional<Empresa> empresaOptional = repositorioEmpresa.findById(empresaId);
+		if (empresaOptional.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		Usuario usuario = UsuarioOptional.get();
-		Set<Mercadoria> listaMercadoria = usuario.getMercadorias();
+		Empresa empresa = empresaOptional.get();
+		Set<Mercadoria> listaMercadoria = empresa.getMercadorias();
 
 		Mercadoria mercadoriaEncontrada = null;
 		for (Mercadoria mercadoriaIterada : listaMercadoria) {
@@ -111,7 +112,7 @@ public class MercadoriaControle {
 		}
 
 		listaMercadoria.remove(mercadoriaEncontrada);
-		repositorioUsuario.save(usuario);
+		repositorioEmpresa.save(empresa);
 		status = HttpStatus.OK;
 
 		return new ResponseEntity<>(status);

@@ -1,5 +1,6 @@
 package com.autobots.automanager.controles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,9 @@ import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.entidades.Venda;
+import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
 import com.autobots.automanager.modelos.adicionadoresLinks.AdicionadorLinkEmpresa;
+import com.autobots.automanager.modelos.adicionadoresLinks.AdicionadorLinkUsuario;
 import com.autobots.automanager.modelos.atualizadores.EmpresaAtualizador;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.servicos.ServicoEmpresa;
@@ -34,6 +37,8 @@ public class EmpresaControle {
 	private ServicoEmpresa servicoEmpresa;
 	@Autowired
 	private AdicionadorLinkEmpresa adicionadorLink;
+	@Autowired
+	private AdicionadorLinkUsuario adicionadorLinkUsuario;
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@GetMapping("/{id}")
@@ -62,6 +67,31 @@ public class EmpresaControle {
 			return resposta;
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------------------------
+
+	@GetMapping("/usuarios/{empresaId}")
+	public ResponseEntity<List<UsuarioHateoas>> obterUsuariosPorEmpresa(@PathVariable Long empresaId) {
+
+		Optional<Empresa> empresaEncontrada = repositorioEmpresa.findById(empresaId);
+		if (empresaEncontrada.isEmpty()) {
+			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			List<Usuario> usuariosDaEmpresa = empresaEncontrada.get().getUsuarios();
+			List<UsuarioHateoas> usuariosHateoas = new ArrayList<UsuarioHateoas>();
+			for (Usuario usuario : usuariosDaEmpresa) {
+				usuariosHateoas.add(new UsuarioHateoas(usuario));
+			}
+
+			adicionadorLink.adicionadorLinkUsuario(usuariosHateoas);
+			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<List<UsuarioHateoas>>(usuariosHateoas,
+					HttpStatus.FOUND);
+			return resposta;
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------------------------
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro")

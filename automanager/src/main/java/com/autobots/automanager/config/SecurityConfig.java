@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       "/",
       "/auth/login",
       "/usuarios", "/usuario/**",
-      "/empresas", "/empresas/**",
+      "/empresas/**", "/empresas/**",
       "/mercadorias", "/mercadoria/**",
       "/veiculos", "/veiculo/**"
   };
@@ -61,9 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
 
     http.cors().and().csrf().disable();
-    http.authorizeHttpRequests()
-        .antMatchers(rotasPublicas).permitAll()
-        .anyRequest().authenticated();
+    http.authorizeRequests()
+        .antMatchers("/**").permitAll();
 
     if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
       http.headers().frameOptions().disable();

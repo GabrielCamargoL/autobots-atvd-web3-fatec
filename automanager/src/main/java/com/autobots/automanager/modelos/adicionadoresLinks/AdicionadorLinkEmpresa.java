@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.autobots.automanager.controles.EmpresaControle;
 import com.autobots.automanager.entidades.Empresa;
+import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
 
 @Component
 public class AdicionadorLinkEmpresa implements AdicionadorLink<Empresa> {
@@ -32,5 +33,8 @@ public class AdicionadorLinkEmpresa implements AdicionadorLink<Empresa> {
             .obterEmpresas())
         .withRel("empresas");
     empresa.add(linkProprio);
+  }
+
+  public void adicionadorLinkUsuario(List<UsuarioHateoas> usuariosHateoas) {
   }
 }

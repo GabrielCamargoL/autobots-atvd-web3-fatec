@@ -53,7 +53,7 @@ public class ServicoEmpresa {
   }
 
   public Empresa cadastrarFuncionario(Empresa empresa, Usuario funcionario) {
-    Set<Usuario> listaUsuario = empresa.getUsuarios();
+    List<Usuario> listaUsuario = empresa.getUsuarios();
 
     listaUsuario.add(funcionario);
     empresa.setUsuarios(listaUsuario);
@@ -110,5 +110,14 @@ public class ServicoEmpresa {
     Venda vendaCriada = repositorioVenda.save(vendaCorpo);
     repositorioEmpresa.save(empresa);
     return vendaCriada;
+  }
+
+  public Empresa cadastrarMercadoria(Empresa empresa, Mercadoria mercadoria) {
+
+    Set<Mercadoria> listaMercadorias = empresa.getMercadorias();
+    listaMercadorias.add(mercadoria);
+    empresa.setMercadorias(listaMercadorias);
+    repositorioMercadoria.save(mercadoria);
+    return repositorioEmpresa.save(empresa);
   }
 }
