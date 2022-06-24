@@ -8,7 +8,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.autobots.automanager.entidades.Mercadoria;
 import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.entidades.Veiculo;
 import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
@@ -49,15 +48,6 @@ public class ServicoUsuario {
   public Usuario cadastrar(Usuario usuario) {
     Usuario usuarioCriado = repositorioUsuario.save(usuario);
     return usuarioCriado;
-  }
-
-  public Usuario cadastrarMercadoria(Usuario usuario, Mercadoria mercadoria) {
-
-    Set<Mercadoria> listaMercadorias = usuario.getMercadorias();
-    listaMercadorias.add(mercadoria);
-    usuario.setMercadorias(listaMercadorias);
-    repositorioMercadoria.save(mercadoria);
-    return repositorioUsuario.save(usuario);
   }
 
   public Veiculo cadastrarVeiculo(Usuario usuario, Veiculo veiculo) {

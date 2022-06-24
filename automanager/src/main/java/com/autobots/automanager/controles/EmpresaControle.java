@@ -1,7 +1,9 @@
 package com.autobots.automanager.controles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.controles.dto.ServicoMercadoriaEmpresaDTO;
+import com.autobots.automanager.controles.dto.UsuariosPorEmpresaDTO;
+import com.autobots.automanager.controles.dto.VeiculosPorEmpresaDTO;
+import com.autobots.automanager.controles.dto.VendasPorEmpresaDTO;
 import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Veiculo;
 import com.autobots.automanager.entidades.Venda;
 import com.autobots.automanager.modelos.adicionadoresLinks.AdicionadorLinkEmpresa;
 import com.autobots.automanager.modelos.atualizadores.EmpresaAtualizador;
@@ -62,6 +69,80 @@ public class EmpresaControle {
 			return resposta;
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------------------------
+
+	@GetMapping("/usuarios")
+	public ResponseEntity<List<UsuariosPorEmpresaDTO>> obterUsuariosPorEmpresa() {
+		List<Empresa> listaEmpresas = repositorioEmpresa.findAll();
+		if (listaEmpresas.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<UsuariosPorEmpresaDTO> usuariosPorEmpresa = new ArrayList<>();
+		for (Empresa empresa : listaEmpresas) {
+			UsuariosPorEmpresaDTO empresaUsuarioDto = new UsuariosPorEmpresaDTO(empresa);
+			usuariosPorEmpresa.add(empresaUsuarioDto);
+		}
+
+		return new ResponseEntity<List<UsuariosPorEmpresaDTO>>(usuariosPorEmpresa, HttpStatus.FOUND);
+	}
+
+	@GetMapping("/vendas")
+	public ResponseEntity<List<VendasPorEmpresaDTO>> obterVendasPorEmpresa() {
+		List<Empresa> listaEmpresas = repositorioEmpresa.findAll();
+		if (listaEmpresas.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<VendasPorEmpresaDTO> vendasPorEmpresa = new ArrayList<>();
+		for (Empresa empresa : listaEmpresas) {
+			VendasPorEmpresaDTO empresaVendaDto = new VendasPorEmpresaDTO(empresa);
+			vendasPorEmpresa.add(empresaVendaDto);
+		}
+
+		return new ResponseEntity<List<VendasPorEmpresaDTO>>(vendasPorEmpresa, HttpStatus.FOUND);
+	}
+
+	@GetMapping("/mercadorias-servicos")
+	public ResponseEntity<List<ServicoMercadoriaEmpresaDTO>> obterMercadoriaServicoPorEmpresa() {
+		List<Empresa> listaEmpresas = repositorioEmpresa.findAll();
+		if (listaEmpresas.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<ServicoMercadoriaEmpresaDTO> mercadoriasServicosPorEmpresa = new ArrayList<>();
+		for (Empresa empresa : listaEmpresas) {
+			ServicoMercadoriaEmpresaDTO empresaMercadoriaServicosDto = new ServicoMercadoriaEmpresaDTO(empresa);
+			mercadoriasServicosPorEmpresa.add(empresaMercadoriaServicosDto);
+		}
+
+		return new ResponseEntity<List<ServicoMercadoriaEmpresaDTO>>(mercadoriasServicosPorEmpresa, HttpStatus.FOUND);
+	}
+
+	@GetMapping("/veiculos")
+	public ResponseEntity<List<VeiculosPorEmpresaDTO>> obterVeiculosAtendidoPorEmpresa() {
+		List<Empresa> listaEmpresas = repositorioEmpresa.findAll();
+		if (listaEmpresas.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		List<VeiculosPorEmpresaDTO> veiculosPorEmpresaDTOs = new ArrayList<>();
+		for (Empresa empresa : listaEmpresas) {
+			Set<Venda> vendas = empresa.getVendas();
+			List<Veiculo> veiculos = new ArrayList<Veiculo>();
+			for (Venda venda : vendas) {
+				Veiculo veiculoDaVenda = venda.getVeiculo();
+				veiculos.add(veiculoDaVenda);
+			}
+			VeiculosPorEmpresaDTO veiculoPorEmpresaDto = new VeiculosPorEmpresaDTO(empresa, veiculos);
+			veiculosPorEmpresaDTOs.add(veiculoPorEmpresaDto);
+		}
+
+		return new ResponseEntity<List<VeiculosPorEmpresaDTO>>(veiculosPorEmpresaDTOs, HttpStatus.FOUND);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------
 
 	@PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('GERENTE')")
 	@PostMapping("/cadastro")

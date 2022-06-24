@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
+
+import com.autobots.automanager.controles.EmpresaControle;
 import com.autobots.automanager.controles.UsuarioControle;
 import com.autobots.automanager.entidades.hateaosDAO.UsuarioHateoas;
 
@@ -28,6 +30,15 @@ public class AdicionadorLinkUsuario implements AdicionadorLink<UsuarioHateoas> {
         .linkTo(WebMvcLinkBuilder
             .methodOn(UsuarioControle.class)
             .obterUsuarios())
+        .withRel("usuarios");
+    usuario.add(linkProprio);
+  }
+
+  public void adicionarLinkUsuarioEmpresa(UsuarioHateoas usuario) {
+    Link linkProprio = WebMvcLinkBuilder
+        .linkTo(WebMvcLinkBuilder
+            .methodOn(EmpresaControle.class)
+            .obterUsuariosPorEmpresa())
         .withRel("usuarios");
     usuario.add(linkProprio);
   }

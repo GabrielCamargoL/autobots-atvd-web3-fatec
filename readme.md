@@ -3,10 +3,10 @@
 </h1>
 
 #### As atividades estão divididas em branchs neste repositório.
-- [Atividade 01 e Atividade 02](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atvd-1_2)
-- [Atividade 03](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv-iii)
-- [Atividade 04](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv-iv)
-- [Atividade 05](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec)
+- [Atividade 01 e Atividade 02](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv_1_2)
+- [Atividade 03](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv_iii)
+- [Atividade 04](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv_iv)
+- [Atividade 05](https://github.com/GabrielCamargoL/autobots-atvd-web3-fatec/tree/atv_v)
 ---
   
 # :bookmark_tabs: Sobre o projeto
