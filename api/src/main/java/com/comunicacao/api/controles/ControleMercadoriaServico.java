@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.comunicacao.api.modelos.Venda;
+import com.comunicacao.api.modelos.MercadoriaServico;
 
 @RestController
 public class ControleMercadoriaServico {
   @SuppressWarnings({ "rawtypes", "unchecked" })
   @GetMapping("/todas-mercadorias-servicos")
   public ResponseEntity<?> obterMercadoriaServico() {
-    List<Venda> vendas = new ArrayList<>();
+    List<MercadoriaServico> mercadoriaServico = new ArrayList<>();
 
     ResponseEntity<? extends List> resposta = new RestTemplate()
-        .getForEntity("http://localhost:8080/empresas/mercadorias-servicos", vendas.getClass());
-    vendas = resposta.getBody();
+        .getForEntity("http://localhost:8080/empresas/mercadorias-servicos", mercadoriaServico.getClass());
+    mercadoriaServico = resposta.getBody();
 
-    return new ResponseEntity<List<Venda>>(vendas, HttpStatus.FOUND);
+    return new ResponseEntity<List<MercadoriaServico>>(mercadoriaServico, HttpStatus.FOUND);
   }
 }
