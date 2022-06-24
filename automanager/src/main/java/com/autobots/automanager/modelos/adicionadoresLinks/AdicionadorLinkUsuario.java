@@ -38,7 +38,7 @@ public class AdicionadorLinkUsuario implements AdicionadorLink<UsuarioHateoas> {
     Link linkProprio = WebMvcLinkBuilder
         .linkTo(WebMvcLinkBuilder
             .methodOn(EmpresaControle.class)
-            .obterUsuariosPorEmpresa(usuario.getId()))
+            .obterUsuariosPorEmpresa())
         .withRel("usuarios");
     usuario.add(linkProprio);
   }

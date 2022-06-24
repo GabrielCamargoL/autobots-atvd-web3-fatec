@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.comunicacao.api.modelos.Usuario;
+import com.comunicacao.api.modelos.Venda;
 
 @RestController
-public class ControleUsuario {
+public class ControleVeiculo {
   @SuppressWarnings({ "rawtypes", "unchecked" })
-  @GetMapping("/todos-usuarios")
-  public ResponseEntity<?> obterUsuarios() {
-    List<Usuario> usuarios = new ArrayList<>();
+  @GetMapping("/todos-veiculos")
+  public ResponseEntity<?> obterVeiculos() {
+    List<Venda> vendas = new ArrayList<>();
 
     ResponseEntity<? extends List> resposta = new RestTemplate()
-        .getForEntity("http://localhost:8080/empresas/usuarios", usuarios.getClass());
-    usuarios = resposta.getBody();
+        .getForEntity("http://localhost:8080/empresas/veiculos", vendas.getClass());
+    vendas = resposta.getBody();
 
-    return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.FOUND);
+    return new ResponseEntity<List<Venda>>(vendas, HttpStatus.FOUND);
   }
 }
