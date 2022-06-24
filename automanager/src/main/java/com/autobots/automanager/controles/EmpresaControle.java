@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.autobots.automanager.controles.dto.UsuariosPorEmpresaDTO;
 import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.entidades.Usuario;
@@ -71,24 +72,19 @@ public class EmpresaControle {
 	// ---------------------------------------------------------------------------------------------------------
 
 	@GetMapping("/usuarios/{empresaId}")
-	public ResponseEntity<List<UsuarioHateoas>> obterUsuariosPorEmpresa(@PathVariable Long empresaId) {
-
-		Optional<Empresa> empresaEncontrada = repositorioEmpresa.findById(empresaId);
-		if (empresaEncontrada.isEmpty()) {
-			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			return resposta;
-		} else {
-			List<Usuario> usuariosDaEmpresa = empresaEncontrada.get().getUsuarios();
-			List<UsuarioHateoas> usuariosHateoas = new ArrayList<UsuarioHateoas>();
-			for (Usuario usuario : usuariosDaEmpresa) {
-				usuariosHateoas.add(new UsuarioHateoas(usuario));
-			}
-
-			adicionadorLink.adicionadorLinkUsuario(usuariosHateoas);
-			ResponseEntity<List<UsuarioHateoas>> resposta = new ResponseEntity<List<UsuarioHateoas>>(usuariosHateoas,
-					HttpStatus.FOUND);
-			return resposta;
+	public ResponseEntity<List<UsuariosPorEmpresaDTO>> obterUsuariosPorEmpresa(@PathVariable Long empresaId) {
+		List<Empresa> listaEmpresas = repositorioEmpresa.findAll();
+		if (listaEmpresas.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+
+		List<UsuariosPorEmpresaDTO> usuariosPorEmpresa = new ArrayList<>();
+		for (Empresa empresa : listaEmpresas) {
+			UsuariosPorEmpresaDTO empresaUsuarioDto = new UsuariosPorEmpresaDTO(empresa);
+			usuariosPorEmpresa.add(empresaUsuarioDto);
+		}
+
+		return new ResponseEntity<>(usuariosPorEmpresa, HttpStatus.FOUND);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------
